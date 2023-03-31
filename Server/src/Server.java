@@ -16,10 +16,9 @@ public class Server {
             while (true)
                 try {
                     Socket socket = serverSocket.accept();
-                        new Thread(() -> {
+                    System.out.println("Client connected");
+                    new Thread(() -> {
                             try {
-
-
                                 BufferedWriter writer =
                                         new BufferedWriter(
                                                 new OutputStreamWriter(
@@ -29,13 +28,23 @@ public class Server {
                                                 new InputStreamReader(
                                                         socket.getInputStream()));
 
-                                String request = reader.readLine();
-                                System.out.println("Request: " + request);
+                                String welcome = "Enter your name: ";
+                                writer.write(welcome);
+                                writer.newLine();
+                                writer.flush();
 
-                                String response = "Hi, client";
-                                System.out.println("Response: " + response);
-
-                                try {Thread.sleep(3000);} catch (InterruptedException e) { e.printStackTrace(); }
+                                String request = "";
+                                while(!request.equals("exit"))
+                                {
+                                    try {
+                                        request = reader.readLine();
+                                        System.out.println(request);
+                                    }catch (IOException e){
+                                        e.printStackTrace();
+                                    }
+                                }
+                                System.out.println("Client disconnected");
+                                String response = "You disconnected from server";
                                 writer.write(response);
                                 writer.newLine();
                                 writer.flush();

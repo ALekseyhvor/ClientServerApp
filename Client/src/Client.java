@@ -8,7 +8,8 @@ public class Client {
     }
     public void go() {
         try (Socket clientSocket = new Socket("127.0.0.1", 7000)){
-             BufferedWriter writer =
+            System.out.println("Connected to server");
+            BufferedWriter writer =
                      new BufferedWriter(
                              new OutputStreamWriter(
                                      clientSocket.getOutputStream()));
@@ -17,11 +18,23 @@ public class Client {
                              new InputStreamReader(
                                      clientSocket.getInputStream()));
 
-            System.out.println("Connected to server");
-            String request = "Hi, server";
-            writer.write(request);
-            writer.newLine();
-            writer.flush();
+            String responseWelcome = reader.readLine();
+            System.out.println("Response: " + responseWelcome);
+
+            String line = "";
+             DataInputStream input = new DataInputStream(System.in);
+             while(!line.equals("exit"))
+             {
+                 try {
+                     line = input.readLine();
+                     writer.write(line);
+                     System.out.println("You writing: " + line);
+                     writer.newLine();
+                     writer.flush();
+                 }catch (IOException e){
+                     e.printStackTrace();
+                 }
+             }
 
             String response = reader.readLine();
             System.out.println("Response: " + response);
